@@ -1,4 +1,6 @@
-﻿namespace AthenaService
+﻿using AthenaService.Services;
+
+namespace AthenaService
 {
     public class Startup
     {
@@ -24,7 +26,11 @@
         {
             AddSwagger(services);
 
-            
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            services
+                .AddServices()
+                .AddPersistence(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

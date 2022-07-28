@@ -1,4 +1,7 @@
-﻿using AthenaService.Logger;
+﻿using System.Data;
+using System.Data.SqlClient;
+using AthenaService.Logger;
+using AthenaService.Persistence;
 
 namespace AthenaService.Services
 {
@@ -17,6 +20,13 @@ namespace AthenaService.Services
             return services.AddSingleton<ILogManager>(_ => new LogManager(logEnv));
         }
 
-
+        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) =>
+           services
+            .AddTransient<IDbConnection, SqlConnection>()
+            .AddScoped(options =>
+            {
+            var tenantConnectionString = "Data Source=2LHZQN2;Initial Catalog=tuhngo-test-source;Integrated Security=True";
+            return PersistenceService.Create(tenantConnectionString);
+        });
     }
 }
