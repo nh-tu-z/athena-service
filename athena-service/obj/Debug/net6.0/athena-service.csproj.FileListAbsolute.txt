@@ -1,0 +1,8 @@
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.csproj.AssemblyReference.cache
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.AssemblyInfoInputs.cache
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.AssemblyInfo.cs
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.csproj.CoreCompileInputs.cache
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.RazorAssemblyInfo.cache
+C:\Users\tuhngo\source\repos\athena-service\athena-service\obj\Debug\net6.0\athena-service.RazorAssemblyInfo.cs
