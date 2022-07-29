@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using System.Data;
 
-namespace AthenaService.Persistance
+namespace AthenaService.Persistence
 {
     public interface IPersistenceService
     {

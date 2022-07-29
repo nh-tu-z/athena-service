@@ -26,6 +26,9 @@ namespace AthenaService
         {
             AddSwagger(services);
 
+            services
+                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services
