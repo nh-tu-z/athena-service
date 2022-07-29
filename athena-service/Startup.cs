@@ -1,4 +1,6 @@
-﻿using AthenaService.Services;
+﻿using FluentValidation.AspNetCore;
+using AthenaService.Services;
+using AthenaService.Middleware;
 
 namespace AthenaService
 {
@@ -24,16 +26,23 @@ namespace AthenaService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            AddSwagger(services);
+            //AddSwagger(services);
 
             services
+                .AddControllersWithViews(options =>
+                {
+                    
+                })
                 .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services
                 .AddServices()
-                .AddPersistence(Configuration);
+                .AddLogger(Configuration, Env)
+                .AddPersistence(Configuration)
+                .AddAutoMapper();
+                //.AddApiVersioningService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,9 +61,10 @@ namespace AthenaService
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseAuthorization();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{_appName} {_version}"); });
+            //app.UseAuthorization();
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{_appName} {_version}"); });
+            //app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 
             app.UseEndpoints(endpoints =>
             {

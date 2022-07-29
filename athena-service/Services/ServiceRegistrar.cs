@@ -1,7 +1,10 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using AthenaService.Logger;
 using AthenaService.Persistence;
+using AthenaService.Interfaces;
 
 namespace AthenaService.Services
 {
@@ -9,6 +12,8 @@ namespace AthenaService.Services
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services
+                .AddScoped<IPipelineService, PipelineService>();
             return services;
         }
 
@@ -25,8 +30,27 @@ namespace AthenaService.Services
             .AddTransient<IDbConnection, SqlConnection>()
             .AddScoped(options =>
             {
-            var tenantConnectionString = "Data Source=2LHZQN2;Initial Catalog=tuhngo-test-source;Integrated Security=True";
-            return PersistenceService.Create(tenantConnectionString);
-        });
+                var tenantConnectionString = "Data Source=2LHZQN2;Initial Catalog=tuhngo-athena-service;Integrated Security=True";
+                return PersistenceService.Create(tenantConnectionString);
+            });
+
+        public static IServiceCollection AddAutoMapper(this IServiceCollection services)
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+
+            return services.AddSingleton(mapper);
+        }
+
+        public static IServiceCollection AddApiVersioningService(this IServiceCollection services) =>
+            services.AddApiVersioning(config =>
+            {
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+            });
     }
 }
