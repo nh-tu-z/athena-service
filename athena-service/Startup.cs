@@ -64,7 +64,9 @@ namespace AthenaService
             //app.UseAuthorization();
             //app.UseSwagger();
             //app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{_appName} {_version}"); });
-            //app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+            app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+            app.UseWebSockets();
+            app.UseMiddleware<ConnectionHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

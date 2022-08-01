@@ -16,7 +16,8 @@ namespace AthenaService.Middleware
             var logManager = serviceProvider.GetService<ILogManager>();
             try
             {
-                logManager.Information("Middleware In try...");
+                logManager.Information("ExceptionHandling Middleware", "AthenaService");
+
                 await next(context);
             }
             catch (Exception ex)

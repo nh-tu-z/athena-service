@@ -30,8 +30,8 @@ namespace AthenaService.Services
             .AddTransient<IDbConnection, SqlConnection>()
             .AddScoped(options =>
             {
-                var tenantConnectionString = "Data Source=2LHZQN2;Initial Catalog=tuhngo-athena-service;Integrated Security=True";
-                return PersistenceService.Create(tenantConnectionString);
+                var tenantConnectionString = "Data Source=2LHZQN2;Initial Catalog=tuhngo-test-source;Integrated Security=True";
+                return PersistenceService.Create(tenantConnectionString); ;
             });
 
         public static IServiceCollection AddAutoMapper(this IServiceCollection services)

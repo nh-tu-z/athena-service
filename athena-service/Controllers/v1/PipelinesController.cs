@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using Dapper.Contrib;
 using AthenaService.Interfaces;
 using AthenaService.Logger;
+using AthenaService.Scratch;
+using AthenaService.Domain.ViewModels;
 
 namespace AthenaService.Controllers.v1
 {
@@ -21,7 +25,14 @@ namespace AthenaService.Controllers.v1
         public async Task<IActionResult> GetPipelineListAsync()
         {
             _logManager.Information("I am in controller");
-            return Ok("Hello world");
+
+            //CreatePipelineDetailInputModel model = new CreatePipelineDetailInputModel();
+
+            //Guid pipelineId = await _pipelineService.CreatePipelineAsync(model);
+
+            //return Ok($"pipeline id: {pipelineId}");
+
+            return Ok("Hello tuhngo@kms-technology.com");
         }
     }
 }
