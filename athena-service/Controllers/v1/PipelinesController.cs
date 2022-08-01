@@ -34,5 +34,19 @@ namespace AthenaService.Controllers.v1
 
             return Ok("Hello tuhngo@kms-technology.com");
         }
+
+        [HttpGet("{id}/check")]
+        public async Task<IActionResult> CheckAsync([FromRoute(Name = "id")] Guid id)
+        {
+            _logManager.Information($"id in api/pipelines/{{id}}/check: {id}", "TODO");
+            return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> CheckConnectionAsync([FromRoute(Name = "id")] Guid id)
+        {
+            _logManager.Information($"id in api/pipelines/{{id}}: {id}", "TODO");
+            return NoContent();
+        }
     }
 }
