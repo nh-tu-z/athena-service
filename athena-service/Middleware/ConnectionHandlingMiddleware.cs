@@ -1,6 +1,7 @@
 ﻿using System.Net.WebSockets;
 using System.IdentityModel.Tokens.Jwt;
 using AthenaService.Logger;
+using AthenaService.CollectorCommunication.WebSocketHandler;
 
 namespace AthenaService.Middleware
 {
@@ -14,7 +15,7 @@ namespace AthenaService.Middleware
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IConfiguration configuration, IServiceProvider services)
+        public async Task InvokeAsync(HttpContext context, IConfiguration configuration, IServiceProvider services, IWebSocketFactory webSocketFactory)
         {
             _logger = services.GetService<ILogManager>();
 
@@ -29,7 +30,8 @@ namespace AthenaService.Middleware
                 {
                     _logger.Information("we're in /ws");
                     var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    await Listen(webSocket);
+                    webSocketFactory.Add(webSocket);
+                    await Listen(webSocket, webSocketFactory);
                 }
                 else
                 {
@@ -55,7 +57,7 @@ namespace AthenaService.Middleware
             }
         }
 
-        private async Task Listen(WebSocket socket)
+        private async Task Listen(WebSocket socket, IWebSocketFactory factory)
         {
             // this param is got from the websocket config
             var bufferSize = 2048;
@@ -67,8 +69,8 @@ namespace AthenaService.Middleware
                 buffer = new byte[bufferSize];
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
-
-            _logger.Information("Disconnected socket might be invoked here", "TODO");
+            factory.Remove(socket);
+            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
     }
 }

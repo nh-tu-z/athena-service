@@ -5,6 +5,7 @@ using AutoMapper;
 using AthenaService.Logger;
 using AthenaService.Persistence;
 using AthenaService.Interfaces;
+using AthenaService.CollectorCommunication.WebSocketHandler;
 
 namespace AthenaService.Services
 {
@@ -52,5 +53,12 @@ namespace AthenaService.Services
                 config.AssumeDefaultVersionWhenUnspecified = true;
                 config.ReportApiVersions = true;
             });
+
+        public static IServiceCollection AddWebSocket(this IServiceCollection services)
+        {
+            services.AddSingleton<IWebSocketFactory, WebSocketFactory>();
+
+            return services;
+        }
     }
 }
