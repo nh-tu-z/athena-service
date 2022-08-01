@@ -9,7 +9,8 @@ using AthenaService.Domain.ViewModels;
 namespace AthenaService.Controllers.v1
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class PipelinesController : ControllerBase
     {
         private readonly IPipelineService _pipelineService;

@@ -1,6 +1,8 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
 using AthenaService.Services;
 using AthenaService.Middleware;
+using AthenaService.Swagger;
 
 namespace AthenaService
 {
@@ -26,7 +28,7 @@ namespace AthenaService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //AddSwagger(services);
+            AddSwagger(services);
 
             services
                 .AddControllersWithViews(options =>
@@ -42,7 +44,7 @@ namespace AthenaService
                 .AddLogger(Configuration, Env)
                 .AddPersistence(Configuration)
                 .AddAutoMapper()
-                //.AddApiVersioningService();
+                .AddApiVersioningService()
                 .AddWebSocket();
         }
 
@@ -62,9 +64,10 @@ namespace AthenaService
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            //app.UseAuthorization();
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{_appName} {_version}"); });
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("../swagger/v1/swagger.json", $"{_appName} {_version}"); });
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
             app.UseWebSockets();
             app.UseMiddleware<ConnectionHandlingMiddleware>();
@@ -95,6 +98,37 @@ namespace AthenaService
         {
             services.AddSwaggerGen(c =>
             {
+                c.SwaggerDoc(_version, new OpenApiInfo() { Title = _appName, Version = _version, Description = "Athena Service Description"});
+                c.DocumentFilter<JsonPatchDocumentFilter>();
+                c.OperationFilter<SwaggerFileOperationFilter>();
+                c.OperationFilter<SwaggerHeaderFilter>();
+
+                c.AddSecurityDefinition("Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        In = ParameterLocation.Header,
+                        Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey
+                    });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
     }
