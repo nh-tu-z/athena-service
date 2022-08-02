@@ -2,10 +2,11 @@
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using AthenaService.AutoMappers;
+using AthenaService.CollectorCommunication.WebSocketHandler;
+using AthenaService.Interfaces;
 using AthenaService.Logger;
 using AthenaService.Persistence;
-using AthenaService.Interfaces;
-using AthenaService.CollectorCommunication.WebSocketHandler;
 
 namespace AthenaService.Services
 {
@@ -39,6 +40,7 @@ namespace AthenaService.Services
         {
             var mapperConfig = new MapperConfiguration(mc =>
             {
+                mc.AddProfile(new TagProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

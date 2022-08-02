@@ -37,5 +37,11 @@
             State = 6,
             CreateAt = 7
         }
+
+        public enum TagCategoryEnums : int
+        {
+            BusinessFunction = 1,
+            BusinessProject = 2
+        }
     }
 }

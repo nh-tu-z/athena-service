@@ -10,15 +10,15 @@ using AthenaService.Domain.ViewModels;
 
 using static AthenaService.Domain.Base.Enums;
 
-namespace AthenaService.UnitTests.Controllers
+namespace AthenaService.UnitTests.Services
 {
-    public class PipelinesControllerTests
+    public class PipelineServiceTest
     {
         private Mock<IPersistenceService> _persistenceService = new();
         private PipelineService _pipelineService;
         private IMapper _mapper;
 
-        public PipelinesControllerTests()
+        public PipelineServiceTest()
         {
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -28,7 +28,7 @@ namespace AthenaService.UnitTests.Controllers
             _mapper = mapperConfig.CreateMapper();
 
             _pipelineService = new PipelineService(_mapper, _persistenceService.Object);
-            
+
         }
 
         [Fact]
@@ -55,37 +55,6 @@ namespace AthenaService.UnitTests.Controllers
             // Assert
             result.Should().NotBe(Guid.Empty);
             _persistenceService.Verify(svc => svc.QuerySingleOrDefaultAsync<Guid>(It.IsAny<string>(), It.IsAny<DynamicParameters>()), Times.Once());
-        }
-
-        [Fact]
-        public void PassingTest()
-        {
-            Assert.Equal(4, Add(2, 2));
-        }
-
-        [Fact]
-        public void FailingTest()
-        {
-            Assert.Equal(5, Add(3, 2));
-        }
-
-        int Add(int x, int y)
-        {
-            return x + y;
-        }
-
-        [Theory]
-        [InlineData(3)]
-        [InlineData(5)]
-        [InlineData(7)]
-        public void MyFirstTheory(int value)
-        {
-            Assert.True(IsOdd(value));
-        }
-
-        bool IsOdd(int value)
-        {
-            return value % 2 == 1;
         }
     }
 }
