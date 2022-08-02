@@ -7,6 +7,7 @@ using FluentValidation.AspNetCore;
 using AthenaService.Services;
 using AthenaService.Middleware;
 using AthenaService.Swagger;
+using AthenaService.CollectorCommunication.Scheduler;
 
 namespace AthenaService
 {
@@ -80,7 +81,8 @@ namespace AthenaService
                 .AddPersistence(Configuration)
                 .AddAutoMapper()
                 .AddApiVersioningService()
-                .AddWebSocket();
+                .AddWebSocket()
+                .AddHostedService<SchedulerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
