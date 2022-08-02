@@ -1,7 +1,7 @@
 athena-service/bin
 athena-service/obj
 
-unit-tests/bin
-unit-tests/obj
+UnitTests/bin
+UnitTests/obj
 
 .vs
