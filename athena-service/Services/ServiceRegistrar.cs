@@ -27,7 +27,7 @@ namespace AthenaService.Services
             return services.AddSingleton<ILogManager>(_ => new LogManager(logEnv));
         }
 
-        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) =>
+        public static IServiceCollection AddPersistence(this IServiceCollection services) =>
            services
             .AddTransient<IDbConnection, SqlConnection>()
             .AddScoped(options =>

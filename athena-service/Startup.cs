@@ -78,7 +78,7 @@ namespace AthenaService
             services
                 .AddServices()
                 .AddLogger(Configuration, Env)
-                .AddPersistence(Configuration)
+                .AddPersistence()
                 .AddAutoMapper()
                 .AddApiVersioningService()
                 .AddWebSocket()
