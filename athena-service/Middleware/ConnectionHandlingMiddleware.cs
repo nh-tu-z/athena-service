@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Caching.Memory;
 using AthenaService.Logger;
 using AthenaService.CollectorCommunication.WebSocketHandler;
+using AthenaService.Common.Utility;
 
 namespace AthenaService.Middleware
 {
@@ -57,7 +58,11 @@ namespace AthenaService.Middleware
 
                 var tenantId = 1; // hardcode
 
-                await _next(context);
+                string cachedConnectionString = await memoryCache.GetOrCreateConnectionString(configuration, tenantId);
+                _logger.Information($"ConnectionString: {cachedConnectionString}", GetType().Name);
+                // TODO - store the connection string to a container and then next...
+
+                context.Response.StatusCode = StatusCodes.Status200OK;
             }
         }
 
