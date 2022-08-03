@@ -80,8 +80,11 @@ namespace AthenaService
                 .AddLogger(Configuration, Env)
                 .AddPersistence()
                 .AddAutoMapper()
+                .AddServiceConfigurations(Configuration)
                 .AddApiVersioningService()
                 .AddWebSocket()
+                .AddMemoryCache()
+                .AddAndStartServiceBus(Configuration)
                 .AddHostedService<SchedulerService>();
         }
 

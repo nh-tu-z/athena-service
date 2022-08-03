@@ -3,7 +3,9 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using AthenaService.AutoMappers;
+using AthenaService.Configuration;
 using AthenaService.CollectorCommunication.WebSocketHandler;
+using AthenaService.CollectorCommunication.ServiceBus;
 using AthenaService.Interfaces;
 using AthenaService.Logger;
 using AthenaService.Persistence;
@@ -62,5 +64,20 @@ namespace AthenaService.Services
 
             return services;
         }
+
+        public static IServiceCollection AddAndStartServiceBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IQueueReceiver, QueueReceiver>();
+
+            var sp = services.BuildServiceProvider();
+            var queueReceiver = sp.GetService<IQueueReceiver>();
+            _ = queueReceiver!.StartAsync();
+
+            return services;
+        }
+
+        public static IServiceCollection AddServiceConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+            services
+                .Configure<TokenSettings>(configuration.GetSection(nameof(TokenSettings)));
     }
 }

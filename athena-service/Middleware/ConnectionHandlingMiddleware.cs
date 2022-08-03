@@ -1,5 +1,6 @@
 ﻿using System.Net.WebSockets;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Caching.Memory;
 using AthenaService.Logger;
 using AthenaService.CollectorCommunication.WebSocketHandler;
 
@@ -15,7 +16,8 @@ namespace AthenaService.Middleware
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IConfiguration configuration, IServiceProvider services, IWebSocketFactory webSocketFactory)
+        public async Task InvokeAsync(HttpContext context, IConfiguration configuration, IServiceProvider services, IWebSocketFactory webSocketFactory,
+                                        IMemoryCache memoryCache)
         {
             _logger = services.GetService<ILogManager>();
 
@@ -52,6 +54,8 @@ namespace AthenaService.Middleware
                 // because we have a specific database for a tenant so we get the tenant id from jwt >> connection string and store in cache using MemoryCache
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                var tenantId = 1; // hardcode
 
                 await _next(context);
             }
