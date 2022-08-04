@@ -8,6 +8,7 @@ using AthenaService.Configuration;
 using AthenaService.CollectorCommunication.WebSocketHandler;
 using AthenaService.CollectorCommunication.ServiceBus;
 using AthenaService.Common.Configuration;
+using AthenaService.Common.CustomHttpClient;
 using AthenaService.Interfaces;
 using AthenaService.Logger;
 using AthenaService.Persistence;
@@ -91,6 +92,10 @@ namespace AthenaService.Services
 
         public static IServiceCollection AddCustomHttpClient(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpClient<OtherCustomHttpClient>(nameof(ServiceUrls.AdminServiceUrl), httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(configuration.GetSection($"{nameof(ServiceUrls)}").Get<ServiceUrls>().AdminServiceUrl);
+            });
             return services;
         }
     }
