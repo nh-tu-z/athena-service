@@ -43,5 +43,17 @@
             BusinessFunction = 1,
             BusinessProject = 2
         }
+
+        public enum MessageType
+        {
+            Integration = 1,
+        }
+
+        public enum IntegrationState : int
+        {
+            Connected = 1,
+            Disconnected = 2,
+            Disabled = 3,
+        }
     }
 }
