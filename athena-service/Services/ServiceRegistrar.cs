@@ -88,5 +88,10 @@ namespace AthenaService.Services
                 .Configure<TokenSettings>(configuration.GetSection(nameof(TokenSettings)))
                 .Configure<CacheConfig>(configuration.GetSection(nameof(CacheConfig)))
                 .Configure<ServiceBusSetting>(configuration.GetSection(nameof(ServiceBusSetting)));
+
+        public static IServiceCollection AddCustomHttpClient(this IServiceCollection services, IConfiguration configuration)
+        {
+            return services;
+        }
     }
 }

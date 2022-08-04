@@ -82,6 +82,7 @@ namespace AthenaService
                 .AddAutoMapper()
                 .AddServiceConfigurations(Configuration)
                 .AddApiVersioningService()
+                .AddCustomHttpClient(Configuration)
                 .AddWebSocket()
                 .AddMemoryCache()
                 .AddAndStartServiceBus(Configuration)
