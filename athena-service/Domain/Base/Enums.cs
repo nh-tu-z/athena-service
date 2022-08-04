@@ -55,5 +55,12 @@
             Disconnected = 2,
             Disabled = 3,
         }
+
+        public enum EnvironmentType : int
+        {
+            Azure = 1,
+            AWS = 2,
+            Databricks = 3,
+        }
     }
 }
