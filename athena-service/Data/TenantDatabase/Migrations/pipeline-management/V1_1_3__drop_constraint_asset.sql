@@ -1,0 +1,1 @@
+ALTER Table [${schema}].[Asset] ALTER COLUMN [LastActivity] NVARCHAR(50) NULL;
