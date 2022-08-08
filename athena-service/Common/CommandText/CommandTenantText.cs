@@ -18,5 +18,7 @@
 				                                                        ELSE 0
 			                                                            END
 	                                                        END) = 1";
+
+        public const string CheckExistedTenantAlias = @"SELECT 1 FROM Tenant WHERE TenantAlias = @TenantAlias";
     }
 }

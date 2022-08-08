@@ -57,6 +57,10 @@ namespace AthenaService.Services
             entity.LastActivity = Activities.TenantActivities.Created;
             entity.LastActivityDate = DateTime.UtcNow;
             entity.CreatedBy = _currentUser.GetCurrentUser().UserId;
+
+            var id = await _adminPersistenceService.InsertAsync(entity);
+
+            return await GetTenantAsync(id);
         }
 
         private async Task<bool> CheckTenantNameIsExistedAsync(string tenantName, int? tenantId = null)
@@ -74,6 +78,26 @@ namespace AthenaService.Services
             var tenantAlias = truncated.Trim().Replace(' ', '-');
             tenantAlias = !string.IsNullOrEmpty(tenantAlias) ? tenantAlias : CommonConstants.DefaultTenantAlias;
             return await GetValidTenantAliasAsync(tenantAlias);
+        }
+
+        private async Task<string> GetValidTenantAliasAsync(string tenantAlias)
+        {
+            var validTenantAlias = false;
+            var tenantAliasNumber = 1;
+            var tenantAliasToCheck = tenantAlias;
+
+            while (!validTenantAlias)
+            {
+                validTenantAlias = await _adminPersistenceService.QuerySingleOrDefaultAsync<dynamic>(CommandTenantText.CheckExistedTenantAlias, new { TenantAlias = tenantAliasToCheck }) == null;
+                if (validTenantAlias)
+                {
+                    return tenantAliasToCheck;
+                }
+                tenantAliasToCheck = (tenantAlias.Length + tenantAliasNumber.ToString().Length > CommonConstants.TenantAliasMaxLenght ? tenantAlias.Substring(0, CommonConstants.TenantAliasMaxLenght - tenantAliasNumber.ToString().Length) : tenantAlias) + tenantAliasNumber;
+                tenantAliasNumber++;
+            }
+
+            throw new Exception(TenantMessages.TenantAliasIsNotGenerated);
         }
     }
 }

@@ -20,7 +20,8 @@ namespace AthenaService.Services
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services
-                .AddScoped<IPipelineService, PipelineService>();
+                .AddScoped<IPipelineService, PipelineService>()
+                .AddScoped<ITenantService, TenantService>();
             return services;
         }
 

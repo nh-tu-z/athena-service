@@ -12,6 +12,8 @@
 
         public const string TenantName = "Tenant Id ";
 
+        public const int TenantAliasMaxLenght = 128;
+
         public static class PipelineValidator
         {
             public const int PipelineNameMaxLength = 255;
@@ -65,6 +67,7 @@
 
         public const int NameMaxLength = 255;
         public const int NameMinLength = 1;
+        public const string DefaultTenantAlias = "tenant";
     }
 
     public static class Activities
@@ -82,5 +85,12 @@
             public const string Updated = "User Updated";
 
         }
+    }
+
+    public static class TenantMessages
+    {
+        public const string TenantNameIsExisted = "Tenant Name is existed.";
+        public const string TenantIsNotFound = "Tenant is not found.";
+        public const string TenantAliasIsNotGenerated = "Tenant Alias is not able to generated.";
     }
 }
