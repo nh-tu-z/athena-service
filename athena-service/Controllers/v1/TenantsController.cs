@@ -33,5 +33,17 @@ namespace AthenaService.Controllers.v1
 
             return Ok(new Response<TenantViewModel>(_mapper.Map<TenantViewModel>(tenant)));
         }
+
+        /// <summary>
+        /// Create a tenant
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync([FromBody] SaveTenantViewModel tenantViewModel)
+        {
+            var tenant = await _tenantService.CreateTenantAsync(tenantViewModel);
+
+            return Ok(new Response<TenantViewModel>(_mapper.Map<TenantViewModel>(tenant)));
+        }
     }
 }

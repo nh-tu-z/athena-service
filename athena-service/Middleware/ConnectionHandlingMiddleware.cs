@@ -62,7 +62,8 @@ namespace AthenaService.Middleware
                 _logger.Information($"ConnectionString: {cachedConnectionString}", GetType().Name);
                 // TODO - store the connection string to a container and then next...
 
-                context.Response.StatusCode = StatusCodes.Status200OK;
+                //context.Response.StatusCode = StatusCodes.Status200OK;
+                _next(context);
             }
         }
 

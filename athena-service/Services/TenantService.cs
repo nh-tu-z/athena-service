@@ -56,7 +56,9 @@ namespace AthenaService.Services
             entity.CreatedAt = DateTime.UtcNow;
             entity.LastActivity = Activities.TenantActivities.Created;
             entity.LastActivityDate = DateTime.UtcNow;
-            entity.CreatedBy = _currentUser.GetCurrentUser().UserId;
+            //entity.CreatedBy = _currentUser.GetCurrentUser().UserId;
+            // hardcode userid
+            entity.CreatedBy = 1;
 
             var id = await _adminPersistenceService.InsertAsync(entity);
 
