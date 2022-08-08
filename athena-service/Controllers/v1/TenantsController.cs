@@ -2,6 +2,7 @@
 using AutoMapper;
 using AthenaService.Interfaces;
 using AthenaService.Common.Events;
+using AthenaService.Domain.ViewModels;
 
 namespace AthenaService.Controllers.v1
 {
