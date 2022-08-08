@@ -62,5 +62,13 @@
             AWS = 2,
             Databricks = 3,
         }
+
+        public enum IntegrationActionType
+        {
+            Enable = 1,
+            Disable = 2,
+            CheckConnection = 3,
+            SyncIntegration = 4
+        }
     }
 }

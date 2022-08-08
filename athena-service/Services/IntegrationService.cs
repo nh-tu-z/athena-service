@@ -1,22 +1,29 @@
-﻿using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using AthenaService.Interfaces;
-using AthenaService.Domain.Settings.Entities;
-using AthenaService.Persistence;
+using AthenaService.CollectorCommunication.Message;
+using AthenaService.CollectorCommunication.WebSocketHandler;
 using AthenaService.Common.CommandText;
 using AthenaService.Domain.Base;
+using AthenaService.Domain.Settings.Entities;
+using AthenaService.Interfaces;
+using AthenaService.Persistence;
+
+using static AthenaService.Domain.Base.Enums;
 
 namespace AthenaService.Services
 {
     public class IntegrationService : IIntegrationService
     {
         private readonly IPersistenceService _persistenceService;
+        private readonly IWebSocketMessageHandler _webSocketMessageHandler;
 
-        public IntegrationService(IPersistenceService persistenceService)
+        public IntegrationService(IPersistenceService persistenceService, IWebSocketMessageHandler webSocketMessageHandler)
         {
             _persistenceService = persistenceService;
+            _webSocketMessageHandler = webSocketMessageHandler;
         }
 
         public async Task<Integration> GetByIdAsync(Guid id) =>
@@ -67,6 +74,29 @@ namespace AthenaService.Services
         {
             var listIntegrationNames = await _persistenceService.QueryAsync<string>(CommandIntegrationText.GetAllIntegrationName);
             return listIntegrationNames.ToList();
+        }
+
+        public async Task CheckConnectionAsync(Guid integrationId, int tenantId)
+        {
+            var integration = await GetByIdAsync(integrationId);
+            if (integration?.State == IntegrationState.Disconnected)
+            {
+                var message = new SocketMessage
+                {
+                    MessageTypeId = (int)MessageType.Integration,
+                    ActionTypeId = (int)IntegrationActionType.CheckConnection,
+                    ItemId = integration.IntegrationId,
+                    TokenId = integration.TokenId,
+                    TenantId = tenantId,
+                };
+                await _webSocketMessageHandler.BroadcastMessage(JsonSerializer.Serialize(message));
+            }
+        }
+
+        public async Task<int> UpdateStateByTokenIdAsync(Guid tokenId, IntegrationState state)
+        {
+            var param = new { tokenId, state, stateUpdatedAt = DateTime.UtcNow };
+            return await _persistenceService.ExecuteAsync(CommandIntegrationText.UpdateIntegrationStateByTokenId, param);
         }
     }
 }

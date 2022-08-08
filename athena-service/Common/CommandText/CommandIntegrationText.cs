@@ -58,5 +58,8 @@
 			ORDER BY RowNum";
 
 		public const string GetAllIntegrationName = @"SELECT DISTINCT i.[IntegrationName] FROM Integration i";
+
+		public const string UpdateIntegrationStateByTokenId = @"UPDATE [Integration] SET [State] = @state, [StateUpdatedAt] = @stateUpdatedAt
+																WHERE [TokenId] = @tokenId";
 	}
 }

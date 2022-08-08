@@ -64,6 +64,7 @@ namespace AthenaService.Services
         public static IServiceCollection AddWebSocket(this IServiceCollection services)
         {
             services.AddSingleton<IWebSocketFactory, WebSocketFactory>();
+            services.AddSingleton<IWebSocketMessageHandler, WebSocketMessageHandler>();
 
             return services;
         }

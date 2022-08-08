@@ -76,6 +76,15 @@ namespace AthenaService.CollectorCommunication.ServiceBus
                     string cachedConnectionString = await _memoryCache.GetOrCreateConnectionString(_configuration, message.TenantId);
 
                     // it will change the connection string there... then using IntegrationService to update sth...
+                    using (var scope = _services.CreateScope())
+                    {
+                        var service = scope.ServiceProvider.GetRequiredService<IIntegrationService>();
+                        var result = await service.UpdateStateByTokenIdAsync(message.TokenId, (IntegrationState)message.State);
+                        if (result == 0)
+                        {
+                            _logManager.Error($"Tenant {message.TenantId} can't update integration with id: {message.ItemId}", GetType().Name);
+                        }
+                    }
                 }
 
                 // complete the message. messages is deleted from the queue.
