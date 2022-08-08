@@ -62,5 +62,8 @@
             public const string RunJob = "RunJob";
             public const string User = "User";
         }
+
+        public const int NameMaxLength = 255;
+        public const int NameMinLength = 1;
     }
 }

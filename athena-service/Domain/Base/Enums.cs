@@ -70,5 +70,21 @@
             CheckConnection = 3,
             SyncIntegration = 4
         }
+
+        public enum TenantState : int
+        {
+            Active = 1,
+            Disabled = 2,
+            SetupInProgress = 3,
+            SetupFailed = 4,
+            AwaitingSetup = 5,
+        }
+
+        public enum UserState : int
+        {
+            Active = 1,
+            Disabled = 2,
+            Invited = 3,
+        }
     }
 }
