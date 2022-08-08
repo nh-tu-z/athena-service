@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using AthenaService.Interfaces;
+using AthenaService.Common.Events;
 
 namespace AthenaService.Controllers.v1
 {
@@ -18,6 +19,18 @@ namespace AthenaService.Controllers.v1
                 ?? throw new ArgumentNullException(nameof(mapper));
             _tenantService = tenantService
                 ?? throw new ArgumentNullException(nameof(tenantService));
+        }
+
+        /// <summary>
+        /// Get tenant by id async
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var tenant = await _tenantService.GetTenantAsync(id);
+
+            return Ok(new Response<TenantViewModel>(_mapper.Map<TenantViewModel>(tenant)));
         }
     }
 }

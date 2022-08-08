@@ -47,6 +47,7 @@ namespace AthenaService.Services
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new TagProfile());
+                mc.AddProfile(new TenantProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
