@@ -66,4 +66,21 @@
         public const int NameMaxLength = 255;
         public const int NameMinLength = 1;
     }
+
+    public static class Activities
+    {
+        public static class TenantActivities
+        {
+            public const string Created = "Tenant Created";
+            public const string Updated = "Tenant Updated";
+
+        }
+
+        public static class UserActivities
+        {
+            public const string Created = "User Created";
+            public const string Updated = "User Updated";
+
+        }
+    }
 }
