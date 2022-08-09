@@ -12,11 +12,14 @@ namespace AthenaService.Services
     {
         private readonly ITenantService _tenantService;
         private readonly IPersistenceService _adminPersistenceService;
+        private readonly ITenantDatabaseSchemaService _tenantDatabaseSchemaService;
 
-        public TenantProvisionTaskService(ITenantService tenantService, IPersistenceService persistenceService)
+        public TenantProvisionTaskService(ITenantService tenantService, IPersistenceService persistenceService,
+                                            ITenantDatabaseSchemaService tenantDatabaseSchemaService)
         {
             _tenantService = tenantService ?? throw new ArgumentNullException(nameof(tenantService));
             _adminPersistenceService = persistenceService ?? throw new ArgumentNullException(nameof(persistenceService));
+            _tenantDatabaseSchemaService = tenantDatabaseSchemaService ?? throw new ArgumentNullException(nameof(tenantDatabaseSchemaService));
         }
 
         public async Task<TenantProvisionTaskModel?> CreateAsync(int tenantId)
@@ -57,9 +60,24 @@ namespace AthenaService.Services
             }
         }
 
-        public Task<TenantProvisionTaskModel?> GetAsync(int taskId)
+        public async Task<TenantProvisionTaskModel?> GetAsync(int taskId)
         {
+            object parameters = new { TenantProvisionTaskId = taskId };
+            string query = CommandTenantProvisionTaskText.GetTenantProvisionTaskById;
+            var tenantProvisionTasks = await GetAllAsync(query, parameters);
+            return tenantProvisionTasks.FirstOrDefault();
+        }
 
+        private async Task<IEnumerable<TenantProvisionTaskModel>> GetAllAsync(string query, object parameters)
+        {
+            return await _adminPersistenceService
+                .QueryAsync<TenantProvisionTaskModel, TenantModel, TenantProvisionTaskModel>(
+                query, (tenantProvisionTask, tenant) =>
+                {
+                    tenantProvisionTask.Tenant = tenant;
+                    return tenantProvisionTask;
+                },
+                parameters, splitOn: nameof(TenantModel.TenantId));
         }
 
         private async Task StartProvisionTenantTask(TenantModel tenant, TenantProvisionTaskModel tenantProvisionTask)
@@ -76,16 +94,26 @@ namespace AthenaService.Services
                 TenantDatabaseSchemaModel? tenantDbSchema = null;
                 try
                 {
+                    string databaseName = "tuhngo-db";
 
+                    tenantDbSchema = await _tenantDatabaseSchemaService.GetAsync(tenantId, databaseName);
+                    if (tenantDbSchema == null)
+                    {
+                        tenantDbSchema = await _tenantDatabaseSchemaService.CreateAsync(tenantId, databaseName, schema);
+                    }
+                    else if (tenantDbSchema.State == TenantDatabaseSchemaState.Provisioned)
+                    {
+                        continue;
+                    }
                 }
                 catch (Exception exception)
                 {
                     exceptions.Add(exception.ToString());
                     if (tenantDbSchema != null)
                     {
-                        //await _tenantDatabaseSchemaService.UpdateStateAsync(
-                        //    tenantDbSchema.TenantDatabaseSchemaId,
-                        //    TenantDatabaseSchemaState.ProvisionedFailed);
+                        await _tenantDatabaseSchemaService.UpdateStateAsync(
+                            tenantDbSchema.TenantDatabaseSchemaId,
+                            TenantDatabaseSchemaState.ProvisionedFailed);
                     }
                 }
             }

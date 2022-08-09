@@ -10,6 +10,6 @@ namespace AthenaService.Interfaces
         Task<Tenant> GetByIdAsync(int id);
         Task<TenantModel> GetTenantAsync(int id);
         Task<TenantModel> CreateTenantAsync(SaveTenantViewModel tenant);
-        Task<TenantModel> UpdateTenantStateAsync(int id, TenantState state)
+        Task<TenantModel> UpdateTenantStateAsync(int id, TenantState state);
     }
 }
