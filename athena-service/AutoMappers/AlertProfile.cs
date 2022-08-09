@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using AthenaService.Domain.Models;
+using AthenaService.Domain.ViewModels;
 
 namespace AthenaService.AutoMappers
 {
