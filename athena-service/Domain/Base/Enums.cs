@@ -126,5 +126,30 @@
             RunRunning = 1,
             Paused = 2
         }
+
+        public enum AlertConfidence : int
+        {
+            Low = 1,
+            Moderate = 2,
+            High = 3
+        }
+
+        public enum AlertStatus : int
+        {
+            New = 1,
+            Active = 2,
+            Dismissed = 3,
+            Resolved = 4,
+            Escalated = 5
+        }
+
+        public enum AlertSortableColumn : int
+        {
+            Priority = 1,
+            Title = 2,
+            Confidence = 3,
+            DetectedOn = 4,
+            Status = 5
+        }
     }
 }
