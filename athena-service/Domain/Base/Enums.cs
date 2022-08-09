@@ -86,5 +86,12 @@
             Disabled = 2,
             Invited = 3,
         }
+
+        public enum TenantProvisionTaskState : int
+        {
+            Running = 1,
+            Success = 2,
+            Failed = 3
+        }
     }
 }
