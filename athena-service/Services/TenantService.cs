@@ -72,6 +72,13 @@ namespace AthenaService.Services
             {
                 // throw 
             }
+
+            entity.State = state;
+            entity.LastActivity = Activities.TenantActivities.Updated;
+            entity.LastActivityDate = DateTime.UtcNow;
+            await _adminPersistenceService.UpdateAsync(entity);
+
+            return await GetTenantAsync(id);
         }
 
         private async Task<bool> CheckTenantNameIsExistedAsync(string tenantName, int? tenantId = null)
