@@ -1,8 +1,8 @@
 ﻿using static AthenaService.Domain.Base.Enums;
 
-namespace AthenaService.Domain.Models
+namespace AthenaService.Domain.ViewModels
 {
-    public class AlertModel
+    public class AlertViewModel
     {
         public Guid AlertId { get; set; }
         public AlertPriority? Priority { get; set; }
