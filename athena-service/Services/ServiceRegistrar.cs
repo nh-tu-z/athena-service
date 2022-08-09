@@ -26,7 +26,8 @@ namespace AthenaService.Services
                 .AddScoped<ITenantProvisionTaskService, TenantProvisionTaskService>()
                 .AddScoped<ITenantMigrationService, TenantMigrationService>()
                 .AddScoped<IRoleService, RoleService>()
-                .AddScoped<ITenantDatabaseSchemaService, TenantDatabaseSchemaService>();
+                .AddScoped<ITenantDatabaseSchemaService, TenantDatabaseSchemaService>()
+                .AddScoped<IAlertRuleService, AlertRuleService>();
 
             return services;
         }
@@ -55,6 +56,7 @@ namespace AthenaService.Services
                 mc.AddProfile(new TagProfile());
                 mc.AddProfile(new TenantProfile());
                 mc.AddProfile(new TenantProvisionTaskProfile());
+                mc.AddProfile(new AlertRuleProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

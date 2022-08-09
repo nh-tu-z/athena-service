@@ -113,5 +113,18 @@
             Enabled = 2,
             Disabled = 3,
         }
+
+        public enum AlertPriority : int
+        {
+            Low = 1,
+            Moderate = 2,
+            High = 3
+        }
+
+        public enum AlertRuleStatus : int
+        {
+            RunRunning = 1,
+            Paused = 2
+        }
     }
 }
