@@ -13,5 +13,9 @@
 				FROM [TenantProvisionTask] task
 				JOIN [Tenant] tenant on tenant.TenantId = task.TenantId
 				WHERE task.[TenantProvisionTaskId] = @TenantProvisionTaskId";
+
+		public static string UpdateTenantProvisionTask
+			=> @"UPDATE TenantProvisionTask SET [State] = @State, [ErrorMessage] = @ErrorMessage
+				WHERE TenantProvisionTaskId = @TenantProvisionTaskId";
 	}
 }

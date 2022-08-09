@@ -100,5 +100,18 @@
             Provisioned = 2,
             ProvisionedFailed = 3
         }
+
+        public enum RoleType : int
+        {
+            Admin = 1,
+            User = 2,
+        }
+
+        public enum RoleState : int
+        {
+            Required = 1,
+            Enabled = 2,
+            Disabled = 3,
+        }
     }
 }

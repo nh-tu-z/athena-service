@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Newtonsoft.Json;
 using AthenaService.Interfaces;
 using AthenaService.Domain.Models;
 using AthenaService.Persistence;
@@ -13,13 +14,18 @@ namespace AthenaService.Services
         private readonly ITenantService _tenantService;
         private readonly IPersistenceService _adminPersistenceService;
         private readonly ITenantDatabaseSchemaService _tenantDatabaseSchemaService;
+        private readonly ITenantMigrationService _tenantMigrationService;
+        private readonly IRoleService _roleService;
 
         public TenantProvisionTaskService(ITenantService tenantService, IPersistenceService persistenceService,
-                                            ITenantDatabaseSchemaService tenantDatabaseSchemaService)
+                                            ITenantDatabaseSchemaService tenantDatabaseSchemaService, IRoleService roleService, 
+                                            ITenantMigrationService tenantMigrationService)
         {
             _tenantService = tenantService ?? throw new ArgumentNullException(nameof(tenantService));
             _adminPersistenceService = persistenceService ?? throw new ArgumentNullException(nameof(persistenceService));
             _tenantDatabaseSchemaService = tenantDatabaseSchemaService ?? throw new ArgumentNullException(nameof(tenantDatabaseSchemaService));
+            _tenantMigrationService = tenantMigrationService ?? throw new ArgumentNullException(nameof(tenantMigrationService));
+            _roleService = roleService ?? throw new ArgumentNullException(nameof(roleService));
         }
 
         public async Task<TenantProvisionTaskModel?> CreateAsync(int tenantId)
@@ -80,6 +86,18 @@ namespace AthenaService.Services
                 parameters, splitOn: nameof(TenantModel.TenantId));
         }
 
+        public async Task<int> UpdateAsync(int taskId,
+        TenantProvisionTaskState state, string? errorMessage)
+        {
+            DynamicParameters parameters = new();
+            parameters.Add("TenantProvisionTaskId", taskId);
+            parameters.Add("ErrorMessage", errorMessage);
+            parameters.Add("State", (int)state);
+
+            return await _adminPersistenceService.QuerySingleOrDefaultAsync<int>(
+                CommandTenantProvisionTaskText.UpdateTenantProvisionTask, parameters);
+        }
+
         private async Task StartProvisionTenantTask(TenantModel tenant, TenantProvisionTaskModel tenantProvisionTask)
         {
             string schema = tenant.TenantAlias;
@@ -105,6 +123,12 @@ namespace AthenaService.Services
                     {
                         continue;
                     }
+
+                    await _tenantMigrationService.PerformMigration(databaseTypeKey, databaseName, schema);
+
+                    await _tenantDatabaseSchemaService.UpdateStateAsync(
+                            tenantDbSchema.TenantDatabaseSchemaId,
+                            TenantDatabaseSchemaState.Provisioned);
                 }
                 catch (Exception exception)
                 {
@@ -116,6 +140,22 @@ namespace AthenaService.Services
                             TenantDatabaseSchemaState.ProvisionedFailed);
                     }
                 }
+                TenantState tenantNewState = TenantState.Active;
+                TenantProvisionTaskState taskState = TenantProvisionTaskState.Success;
+                string? errorMessage = null;
+                if (exceptions.Any())
+                {
+                    tenantNewState = TenantState.SetupFailed;
+                    taskState = TenantProvisionTaskState.Failed;
+                    errorMessage = JsonConvert.SerializeObject(exceptions);
+                }
+                else
+                {
+                    await _roleService.CreateRolesForTenant(tenantId);
+                }
+                await _tenantService.UpdateTenantStateAsync(tenantId, tenantNewState);
+                await UpdateAsync(tenantProvisionTask.TenantProvisionTaskId,
+                    taskState, errorMessage);
             }
         }
     }
