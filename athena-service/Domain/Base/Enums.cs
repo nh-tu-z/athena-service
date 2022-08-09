@@ -93,5 +93,12 @@
             Success = 2,
             Failed = 3
         }
+
+        public enum TenantDatabaseSchemaState : int
+        {
+            NotReady = 1,
+            Provisioned = 2,
+            ProvisionedFailed = 3
+        }
     }
 }

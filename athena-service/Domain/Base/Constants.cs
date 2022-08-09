@@ -68,6 +68,7 @@
         public const int NameMaxLength = 255;
         public const int NameMinLength = 1;
         public const string DefaultTenantAlias = "tenant";
+        public const string TenantMigrationDirectory = "Data/TenantDatabase/Migrations";
     }
 
     public static class Activities

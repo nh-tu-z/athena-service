@@ -65,6 +65,15 @@ namespace AthenaService.Services
             return await GetTenantAsync(id);
         }
 
+        public async Task<TenantModel> UpdateTenantStateAsync(int id, TenantState state)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity == null)
+            {
+                // throw 
+            }
+        }
+
         private async Task<bool> CheckTenantNameIsExistedAsync(string tenantName, int? tenantId = null)
         {
             var tenantNameIsExisted = await _adminPersistenceService.QuerySingleOrDefaultAsync<dynamic>(CommandTenantText.CheckExistedTenantName, new { Name = tenantName, TenantId = tenantId }) != null;

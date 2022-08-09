@@ -4,8 +4,8 @@ namespace AthenaService.Interfaces
 {
     public interface ITenantProvisionTaskService
     {
-        public Task<TenantProvisionTaskModel?> CreateAsync(int tenantId);
+        Task<TenantProvisionTaskModel?> CreateAsync(int tenantId);
 
-        public Task<TenantProvisionTaskModel?> GetAsync(int taskId);
+        Task<TenantProvisionTaskModel?> GetAsync(int taskId);
     }
 }
