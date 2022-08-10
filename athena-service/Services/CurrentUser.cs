@@ -40,5 +40,27 @@ namespace AthenaService.Services
             }
             return currentUserModel;
         }
+
+        public string? GetClaimByType(string type)
+        {
+            string? claimValue = null;
+            try
+            {
+                if (_httpContextAccessor.HttpContext?.User is ClaimsPrincipal principal)
+                {
+                    var claims = principal.Claims;
+                    if (null != claims)
+                    {
+                        claimValue = claims.FirstOrDefault(x => x.Type == type)?.Value;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return claimValue;
+        }
     }
 }

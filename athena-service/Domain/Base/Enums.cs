@@ -151,5 +151,11 @@
             DetectedOn = 4,
             Status = 5
         }
+
+        public enum PermissionType : int
+        {
+            Admin = 1,
+            User = 2,
+        }
     }
 }

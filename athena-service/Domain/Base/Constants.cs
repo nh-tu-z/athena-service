@@ -65,6 +65,13 @@
             public const string User = "User";
         }
 
+        public static class Clams
+        {
+            public const string Email = "email";
+            public const string Jti = "jti";
+            public const string TenantIdClaimName = "currentTenantId";
+        }
+
         public const int NameMaxLength = 255;
         public const int NameMinLength = 1;
         public const string DefaultTenantAlias = "tenant";
